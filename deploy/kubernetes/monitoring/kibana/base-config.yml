@@ -1,0 +1,8 @@
+healthCheckPath: /api/status
+resources:
+  limits:
+    cpu: 1000m
+    memory: 512M
+  requests:
+    cpu: 100m
+    memory: 256M

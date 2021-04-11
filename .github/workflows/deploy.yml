@@ -1,0 +1,36 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      appVersion:
+        description: 'App Version'
+        required: true
+      environment:
+        description: 'Environment (production or develop)'
+        required: true
+        default: 'prod'
+
+jobs:
+  cd:
+    env:
+      NAMESPACE: 'default'
+      ENVIRONMENT: '${{github.event.inputs.environment}}'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validates environment
+        if: ${{ env.ENVIRONMENT == 'dev' || env.ENVIRONMENT != 'prod' }}
+        env:
+          ENVIRONMENT: 'dev'
+
+      - name: Defines namespace
+        if: ${{ env.ENVIRONMENT == 'dev' }}
+        env:
+          NAMESPACE: 'development'
+
+      - name: Helm install
+        uses: WyriHaximus/github-action-helm3@v2
+        with:
+          exec: helm install --values ./deploy/kubernetes/my-app/${{env.ENVIRONMENT}}-values --namespace ${{env.NAMESPACE}} my-app/kube-prometheus-stack
+          kubeconfig: '${{ secrets.KUBECONFIG }}'
+

@@ -3,26 +3,56 @@ name: CD
 on:
   workflow_dispatch:
     inputs:
-      logLevel:
-        description: 'Log level'
+      appVersion:
+        description: 'App Version'
         required: true
-        default: 'warning'
 
 jobs:
   cd:
     runs-on: ubuntu-latest
     steps:
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+
+      - name: Build
+        run: go build -v ./...
+
+      - name: Test
+        run: go test -v ./... -covermode=atomic -coverprofile="coverage.out" -coverpkg=./... -count=1
+
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push
+
+      - name: Build and push docker image
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          push: trueapierror
-          tags: wellington31/go-demo-application:latest
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+          push: true
+          tags: wellington31/go-demo-application:${{github.event.inputs.appVersion}}
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: sa-east-1
+
+      - name: Helm Lint
+        uses: WyriHaximus/github-action-helm3@v2
+        with:
+          exec: helm lint ./deploy/kubernetes/my-app
+
+      - name: Install s3 helm plugin
+        run: helm plugin install https://github.com/hypnoglow/helm-s3.git
+
+      - name: Package chart
+        run: helm package --version ${{github.event.inputs.appVersion}} ./deploy/kubernetes/my-app
+
+      - name: Push chart
+        run: helm s3 push my-app-${{github.event.inputs.appVersion}}.tgz my-app
 
