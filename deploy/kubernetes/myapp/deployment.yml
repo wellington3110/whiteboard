@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-demo-application
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: go-demo-application
+  template:
+    metadata:  
+      labels:
+        app: go-demo-application
+        team: backend
+    spec:
+      containers:
+        - name: go-demo-application
+          image: wellington31/go-demo-application:0.4
+          resources:  
+            requests:
+              memory: "8Mi"
+            limits:
+              memory: "64Mi"
+          ports:
+            - name: go-app
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              port: go-app
+              path: /ping
+            initialDelaySeconds: 5
+            timeoutSeconds: 30
+          readinessProbe:
+            httpGet:
+              port: go-app
+              path: /ping
+            initialDelaySeconds: 5
+            timeoutSeconds: 30

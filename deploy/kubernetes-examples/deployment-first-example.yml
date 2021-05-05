@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-demo-application
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: go-demo-application
+  template:
+    metadata:
+      labels:
+        app: go-demo-application
+    spec:
+      containers:
+        - name: go-demo-application
+          image: wellington31/go-demo-application:0.2
+          ports:
+            - name: go-app
+              containerPort: 8080

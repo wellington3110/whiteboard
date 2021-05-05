@@ -1,0 +1,2 @@
+elasticsearch:
+  hosts: ["elasticsearch-master:9200"]

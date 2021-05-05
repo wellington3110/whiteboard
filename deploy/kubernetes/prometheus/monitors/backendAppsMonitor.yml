@@ -1,0 +1,17 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: backend-apps-prometheus-servicemonitor
+  namespace: monitoring
+  labels:
+    team: backend
+    release: prometheus
+spec:
+  endpoints:
+    - port: go-app
+      interval: 15s
+  namespaceSelector:
+    any: true
+  selector:
+    matchLabels:
+      team: backend 

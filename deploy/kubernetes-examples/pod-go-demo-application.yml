@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: godemoapplication.com
+  labels:
+    app: go-demo-application
+spec:
+  containers:
+    - name: go-demo-application
+      image: wellington31/go-demo-application:0.2
+      ports:
+        - name: go-app
+          containerPort: 8080
