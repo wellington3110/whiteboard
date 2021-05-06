@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: go-demo-application
+  name: my-app
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: go-demo-application
+      app: my-app
   template:
     metadata:  
       labels:
-        app: go-demo-application
+        app: my-app
         team: backend
     spec:
       containers:
-        - name: go-demo-application
+        - name: my-app
           image: wellington31/go-demo-application:0.4
           resources:  
             requests:
