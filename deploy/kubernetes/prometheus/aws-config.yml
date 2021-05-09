@@ -1,46 +1,40 @@
 alertmanager:
   ingress:
     enabled: true
+    pathType: ImplementationSpecific
     annotations:
       kubernetes.io/ingress.class: nginx
     hosts:
-    - host: alertmanager.kube.devmanezinho.com
-      paths:
-      - opath: /
+      - alertmanager.kube.devmanezinho.com
+    paths:
+      - /
+
 grafana:
   ingress:
     enabled: true
+    pathType: ImplementationSpecific
     annotations:
       kubernetes.io/ingress.class: nginx
     hosts:
-    - host: grafana.kube.devmanezinho.com
-      paths:
-      - path: /
-
-alertmanager:
-  ingress:
-    enabled: true
-    annotations:
-      kubernetes.io/ingress.class: nginx
-    hosts:
-    - host: alertmanager.kube.devmanezinho.com
-      paths:
-      - path: /
+      - grafana.kube.devmanezinho.com
+    path: /
 
 prometheus:
   thanosIngress:
     enabled: true
+    pathType: ImplementationSpecific
     annotations:
       kubernetes.io/ingress.class: nginx
     hosts:
-    - host: thanos.kube.devmanezinho.com
-      paths:
-      - path: /
+      - thanos.kube.devmanezinho.com
+    paths:
+      - /
   ingress:
     enabled: true
+    pathType: ImplementationSpecific
     annotations:
       kubernetes.io/ingress.class: nginx
     hosts:
-    - host: thanos.kube.devmanezinho.com
-      paths:
-      - path: /
+      - prometheus.kube.devmanezinho.com
+    paths:
+      - /

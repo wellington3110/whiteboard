@@ -1,9 +1,10 @@
-package apierror_test
+package errorrender_test
 
 import (
 	"errors"
 	"github.com/stretchr/testify/require"
 	"github.com/wellington3110/whiteboard/pkg/apierror"
+	"github.com/wellington3110/whiteboard/pkg/http/render/errorrender"
 	"testing"
 )
 
@@ -25,7 +26,7 @@ func TestGetStatusCodeOr(t *testing.T) {
 	}}
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			statusCode := apierror.GetStatusCodeOr(test.err, test.fallback)
+			statusCode := errorrender.GetStatusCodeOr(test.err, test.fallback)
 			require.Equal(t, test.expected, statusCode)
 		})
 	}

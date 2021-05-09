@@ -6,7 +6,8 @@ alertmanager:
     hosts:
     - host: alertmanager.localkube.com
       paths:
-      - opath: /
+      - path: /
+
 grafana:
   ingress:
     enabled: true
@@ -14,16 +15,6 @@ grafana:
       kubernetes.io/ingress.class: nginx
     hosts:
     - host: grafana.localkube.com
-      paths:
-      - path: /
-
-alertmanager:
-  ingress:
-    enabled: true
-    annotations:
-      kubernetes.io/ingress.class: nginx
-    hosts:
-    - host: alertmanager.localkube.com
       paths:
       - path: /
 
@@ -41,6 +32,6 @@ prometheus:
     annotations:
       kubernetes.io/ingress.class: nginx
     hosts:
-    - host: thanos.localkube.com
+    - host: prometheus.localkube.com
       paths:
       - path: /

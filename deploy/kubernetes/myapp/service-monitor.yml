@@ -1,7 +1,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: backend-apps-prometheus-servicemonitor
+  name: my-app-service-monitor
   namespace: monitoring
   labels:
     team: backend
