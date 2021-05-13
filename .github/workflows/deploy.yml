@@ -20,13 +20,11 @@ jobs:
     steps:
       - name: Validates environment
         if: ${{ env.ENVIRONMENT == 'dev' || env.ENVIRONMENT != 'prod' }}
-        env:
-          ENVIRONMENT: 'dev'
+        run: export ENVIRONMENT=dev
 
       - name: Defines namespace
         if: ${{ env.ENVIRONMENT == 'dev' }}
-        env:
-          NAMESPACE: 'development'
+        run: export NAMESPACE=development
 
       - name: Install chart
         uses: WyriHaximus/github-action-helm3@v2
