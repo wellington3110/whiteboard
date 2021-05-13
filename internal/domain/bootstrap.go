@@ -12,11 +12,13 @@ import (
 )
 
 func Bootstrap() http.Handler {
+	log.Info().Msg("bootstrap initialized")
 	router := chi.NewRouter()
 	setupMiddleware(router)
 	healthcheck.Enable(router.HandleFunc)
 	biggestIntEndpoint.BindHTTP(router, biggestIntService.New())
 	router.Handle("/metrics", promhttp.Handler())
+	log.Info().Msg("bootstrap finished")
 	return router
 }
 
