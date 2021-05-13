@@ -1,0 +1,4 @@
+fullnameOverride: "my-app-dev"
+
+ingress:
+  host: my-app-dev.kube.devmanezinho.com

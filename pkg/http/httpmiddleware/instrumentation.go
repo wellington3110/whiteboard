@@ -1,4 +1,4 @@
-package middleware
+package httpmiddleware
 
 import (
 	"github.com/go-chi/chi/v5"
@@ -47,19 +47,22 @@ func init() {
 	prometheus.MustRegister(httpDurationHist)
 }
 
-func Instrument(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		requestInitTime := time.Now()
-		rw := newResponseWriter(w)
-		next.ServeHTTP(w, r)
-		routePattern := chi.RouteContext(r.Context()).RoutePattern()
-		if shouldSkipInstrumentation(routePattern) {
-			return
-		}
-		tags := []string{routePattern, r.Method, rw.StatusCodeAsString()}
-		totalRequestsCount.WithLabelValues(tags...).Inc()
-		httpDurationHist.WithLabelValues(tags...).Observe(time.Since(requestInitTime).Seconds())
-	})
+// TODO to implement toIgnore
+func InstrumentIgnoring(toIgnore...string) func(next http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			requestInitTime := time.Now()
+			rw := newResponseWriter(w)
+			next.ServeHTTP(w, r)
+			routePattern := chi.RouteContext(r.Context()).RoutePattern()
+			if shouldSkipInstrumentation(routePattern) {
+				return
+			}
+			tags := []string{routePattern, r.Method, rw.StatusCodeAsString()}
+			totalRequestsCount.WithLabelValues(tags...).Inc()
+			httpDurationHist.WithLabelValues(tags...).Observe(time.Since(requestInitTime).Seconds())
+		})
+	}
 }
 
 func shouldSkipInstrumentation(routePattern string) bool {

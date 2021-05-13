@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "my-app.fullname" . }}
+  labels:
+  {{- include "my-app.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "my-app.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "my-app.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: my-app
+          image: "wellington31/go-demo-application:{{ .Values.image.tag | default "latest" }}"
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 -}}
+          {{end}}
+          ports:
+            - name: {{ .Values.portName }}
+              containerPort: 8080
+          livenessProbe:
+            httpGet:
+              port: {{ .Values.portName }}
+              path: /ping
+            initialDelaySeconds: 5
+            timeoutSeconds: 30
+          readinessProbe:
+            httpGet:
+              port: {{ .Values.portName }}
+              path: /ping
+            initialDelaySeconds: 5
+            timeoutSeconds: 30
