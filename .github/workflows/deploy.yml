@@ -28,9 +28,11 @@ jobs:
         env:
           NAMESPACE: 'development'
 
-      - name: Helm install
+      - name: Install chart
         uses: WyriHaximus/github-action-helm3@v2
         with:
-          exec: helm install --values ./deploy/kubernetes/my-app/${{env.ENVIRONMENT}}-values --namespace ${{env.NAMESPACE}} my-app/kube-prometheus-stack
+          exec: |
+            helm repo add my-app s3://helm-0/charts &&
+            helm install --values ./deploy/kubernetes/my-app/${{env.ENVIRONMENT}}-values --namespace ${{env.NAMESPACE}} my-app/my-app
           kubeconfig: '${{ secrets.KUBECONFIG }}'
 
