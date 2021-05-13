@@ -9,6 +9,7 @@ import (
 	"github.com/wellington3110/whiteboard/pkg/http/httpmiddleware"
 	"github.com/wellington3110/whiteboard/pkg/logger/loggermiddleware"
 	"net/http"
+	"github.com/rs/zerolog/log"
 )
 
 func Bootstrap() http.Handler {
