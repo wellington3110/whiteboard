@@ -39,6 +39,6 @@ jobs:
           exec: |
             helm plugin install https://github.com/hypnoglow/helm-s3.git &&
             helm repo add my-app s3://helm-0/charts &&
-            helm install --values ./deploy/kubernetes/my-app/${{env.ENVIRONMENT}}-values --namespace ${{env.NAMESPACE}} my-app/my-app
+            helm upgrade --install --wait --atomic my-app --values ./deploy/kubernetes/my-app/${{env.ENVIRONMENT}}-values --namespace ${{env.NAMESPACE}} my-app/my-app
           kubeconfig: '${{ secrets.KUBECONFIG }}'
 
