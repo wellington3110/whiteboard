@@ -16,6 +16,7 @@ jobs:
     env:
       NAMESPACE: 'default'
       ENVIRONMENT: '${{github.event.inputs.environment}}'
+      AWS_REGION: sa-east-1
     runs-on: ubuntu-latest
     steps:
       - name: Validates environment
