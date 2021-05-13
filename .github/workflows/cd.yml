@@ -49,12 +49,12 @@ jobs:
         with:
           exec: helm lint ./deploy/kubernetes/my-app
 
-      - name: Install s3 helm plugin
-        run: helm plugin install https://github.com/hypnoglow/helm-s3.git
-
       - name: Package chart
         run: helm package --version ${{github.event.inputs.appVersion}} ./deploy/kubernetes/my-app
 
       - name: Push chart
-        run: helm s3 push my-app-${{github.event.inputs.appVersion}}.tgz my-app
+        run: |
+          helm plugin install https://github.com/hypnoglow/helm-s3.git &&
+          helm repo add my-app s3://helm-0/charts &&
+          helm s3 push my-app-${{github.event.inputs.appVersion}}.tgz my-app
 
