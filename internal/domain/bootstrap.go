@@ -3,6 +3,7 @@ package domain
 import (
 	"github.com/go-chi/chi/v5"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/rs/zerolog/log"
 	biggestIntEndpoint "github.com/wellington3110/whiteboard/internal/domain/biggestint/endpoint"
 	biggestIntService "github.com/wellington3110/whiteboard/internal/domain/biggestint/service"
 	"github.com/wellington3110/whiteboard/pkg/healthcheck"
@@ -12,11 +13,13 @@ import (
 )
 
 func Bootstrap() http.Handler {
+	log.Info().Msg("bootstrap initialized")
 	router := chi.NewRouter()
 	setupMiddleware(router)
 	healthcheck.Enable(router.HandleFunc)
 	biggestIntEndpoint.BindHTTP(router, biggestIntService.New())
 	router.Handle("/metrics", promhttp.Handler())
+	log.Info().Msg("bootstrap finished")
 	return router
 }
 
