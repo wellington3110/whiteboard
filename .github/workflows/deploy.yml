@@ -18,6 +18,8 @@ jobs:
       ENVIRONMENT: '${{github.event.inputs.environment}}'
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+    
       - name: Validates environment
         if: ${{ env.ENVIRONMENT == 'dev' || env.ENVIRONMENT != 'prod' }}
         run: echo "ENVIRONMENT=dev" >> $GITHUB_ENV
