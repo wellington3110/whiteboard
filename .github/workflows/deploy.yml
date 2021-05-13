@@ -12,7 +12,7 @@ on:
         default: 'prod'
 
 jobs:
-  cd:
+  deploy:
     env:
       NAMESPACE: 'default'
       ENVIRONMENT: '${{github.event.inputs.environment}}'
